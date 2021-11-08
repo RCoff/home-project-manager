@@ -1,15 +1,19 @@
+import logging
 import uuid
 
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.views import View
 from . import forms
 from data import models
 
 
+# TODO: Add (middleware?) authentication verification for properties/projects/etc.
+
+
 # Create your views here.
 class Index(View):
     template = 'index.html'
-    form = forms.CreateProjectsForm()
+    form = forms.AddPropertiesForm()
     context = {'form': form}
     user = None
 
@@ -17,8 +21,19 @@ class Index(View):
         if request.user.is_authenticated:
             self.user = request.user
             self.context.update({'properties': self.properties()})
+        else:
+            self.context.pop('form')
 
         return render(request, template_name=self.template, context=self.context)
+
+    def post(self, request):
+        self.form = forms.AddPropertiesForm(request.POST)
+        if self.form.is_valid():
+            self.form.save(commit=False)
+            self.form.users.add(request.user)
+            self.form.save()
+
+        return HttpResponseRedirect(reverse('home'))
 
     def properties(self):
         q = models.Properties.objects.filter(users=self.user)
@@ -58,8 +73,9 @@ class SpaceView(View):
 
 class CreateProjectView(View):
     template = 'project.html'
+    form = models.Projects()
     return_url = ""
-    context = {}
+    context = {'form': form}
 
     def get(self, request):
         return render(request, template_name=self.template, context=self.context)
