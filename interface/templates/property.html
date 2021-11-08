@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ property.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="display-3">{{ property.name }}</h1>
+        <button type="button" class="btn btn-primary mb-4">Home Projects</button>
+        <div class="row">
+            {% for space in spaces %}
+                <div class="col-6 col-md-4 col-sm-3">
+                    <a href="{% url 'space' property.id space.id %}" class="btn btn-primary">{{ space.name }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

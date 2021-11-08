@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ space.name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Projects</h3>
+        <ul>
+            {% for project in projects %}
+                <li>
+                    {{ project.name }}
+                </li>
+            {% empty %}
+                <button type="button" class="btn btn-primary">Add Project</button>
+            {% endfor %}
+        </ul>
+        <h3>Tasks</h3>
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    {{ task.name }}
+                </li>
+            {% empty %}
+                <button type="button" class="btn btn-primary">Add Task</button>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

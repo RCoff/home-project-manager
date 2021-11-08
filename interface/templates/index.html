@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h3>Welcome</h3>
+        {% if properties %}
+            <p>My properties:</p>
+            <div class="row g-3">
+                {% for property in properties %}
+                    <div class="col">
+                        <a class="btn btn-primary" href="{% url 'property' property.id %}">{{ property.name }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
