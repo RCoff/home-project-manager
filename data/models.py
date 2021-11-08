@@ -75,6 +75,7 @@ class Projects(models.Model):
     status = models.CharField(choices=status_choices, max_length=2, default='pl')
     cost = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True)
     images = models.ManyToManyField(Images, blank=True)
+    shared_users = models.ManyToManyField(User, blank=True)
 
     @property_
     def display_cost(self):
