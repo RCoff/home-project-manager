@@ -102,7 +102,7 @@ class AddSpaceView(View):
             self.form.instance.property = get_property(id)
             new_space = self.form.save()
 
-            return HttpResponseRedirect(reverse('space', args=[id, new_space.id]))
+            return HttpResponseRedirect(reverse('space', args=[new_space.id]))
 
 
 def get_space(space_id: uuid.uuid4):
