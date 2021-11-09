@@ -62,9 +62,8 @@ class SpaceView(View):
     space = None
     context = {}
 
-    def get(self, request, property_id, space_id):
-        self.property = get_property(property_id)
-        self.space = get_space(space_id)
+    def get(self, request, id):
+        self.space = get_space(id)
 
         self.context.update({'property': self.property,
                              'space': self.space,
@@ -76,7 +75,7 @@ class SpaceView(View):
 
 class CreateProjectView(View):
     template = 'project.html'
-    form = models.Projects()
+    form = forms.CreateProjectsForm()
     return_url = ""
     context = {'form': form}
 
@@ -85,6 +84,25 @@ class CreateProjectView(View):
 
     def post(self, request):
         pass
+
+
+class AddSpaceView(View):
+    template = 'space_add.html'
+    form = forms.AddPropertySpacesForm()
+    context = {'form': form}
+    property_id = None
+
+    def get(self, request, id):
+        self.property_id = id
+        return render(request, template_name=self.template, context=self.context)
+
+    def post(self, request, id):
+        self.form = forms.AddPropertySpacesForm(request.POST)
+        if self.form.is_valid():
+            self.form.instance.property = get_property(id)
+            new_space = self.form.save()
+
+            return HttpResponseRedirect(reverse('space', args=[id, new_space.id]))
 
 
 def get_space(space_id: uuid.uuid4):

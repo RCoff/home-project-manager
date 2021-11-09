@@ -4,7 +4,8 @@
 
 {% block content %}
     <div class="container">
-        <h3>Projects</h3>
+        <h1 class="display-6">{{ space.name }}</h1>
+        <h2>Projects</h2>
         <ul>
             {% for project in projects %}
                 <li>
@@ -14,7 +15,7 @@
                 <button type="button" class="btn btn-primary">Add Project</button>
             {% endfor %}
         </ul>
-        <h3>Tasks</h3>
+        <h2>Tasks</h2>
         <ul>
             {% for task in tasks %}
                 <li>

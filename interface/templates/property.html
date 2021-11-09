@@ -4,12 +4,16 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="display-3">{{ property.name }}</h1>
-        <button type="button" class="btn btn-primary mb-4">Home Projects</button>
+        <h1 class="display-3 mb-4">{{ property.name }}</h1>
+        <button type="button" class="btn btn-primary">Home Projects</button>
+        {% if not spaces %}
+            <a href="{% url 'space-add' property.id %}" class="btn btn-primary">Add a space</a>
+        {% endif %}
+        <h6>Spaces:</h6>
         <div class="row">
             {% for space in spaces %}
                 <div class="col-6 col-md-4 col-sm-3">
-                    <a href="{% url 'space' property.id space.id %}" class="btn btn-primary">{{ space.name }}</a>
+                    <a href="{% url 'space' space.id %}" class="btn btn-primary">{{ space.name }}</a>
                 </div>
             {% endfor %}
         </div>

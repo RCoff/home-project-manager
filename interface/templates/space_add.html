@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a space{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form action="#" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+    </div>
+{% endblock %}
