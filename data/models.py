@@ -32,7 +32,15 @@ class Properties(models.Model):
     updated = models.DateTimeField(auto_now=True, editable=True)
     archived = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
-    thumbnail = models.ForeignKey(Images, on_delete=models.CASCADE)
+    thumbnail = models.ForeignKey(Images, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name'], name='unique_property'),
+        ]
+
+    def check_users(self):
+        pass
 
     def __str__(self):
         return f"{self.name} ({self.id})"

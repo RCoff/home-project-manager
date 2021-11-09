@@ -14,13 +14,16 @@ from data import models
 class Index(View):
     template = 'index.html'
     form = forms.AddPropertiesForm()
-    context = {'form': form}
+    context = {}
     user = None
 
     def get(self, request):
         if request.user.is_authenticated:
             self.user = request.user
             self.context.update({'properties': self.properties()})
+
+            if not self.context.get('properties'):
+                self.context.update({'form': self.form})
         else:
             self.context.pop('form')
 
@@ -29,8 +32,8 @@ class Index(View):
     def post(self, request):
         self.form = forms.AddPropertiesForm(request.POST)
         if self.form.is_valid():
-            self.form.save(commit=False)
-            self.form.users.add(request.user)
+            self.form.save()
+            self.form.instance.users.add(request.user)
             self.form.save()
 
         return HttpResponseRedirect(reverse('home'))
