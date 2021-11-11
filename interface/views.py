@@ -1,6 +1,7 @@
 import logging
 import uuid
 
+import django.db.utils
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.views import View
 from . import forms
@@ -65,25 +66,52 @@ class SpaceView(View):
     def get(self, request, id):
         self.space = get_space(id)
 
-        self.context.update({'property': self.property,
+        self.context.update({'property': self.space.property,
                              'space': self.space,
-                             'projects': self.space.projects_set.all,
+                             'projects': self.space.projects_set.all(),
                              'tasks': self.space.tasks.all})
 
         return render(request, template_name=self.template, context=self.context)
 
 
+class ProjectView(View):
+    template = "project.html"
+    context = {}
+
+    def get(self, request, id):
+        self.context.update({'project': get_project(id)})
+
+        return render(request, template_name=self.template, context=self.context)
+
+
 class CreateProjectView(View):
-    template = 'project.html'
+    template = 'project_create.html'
     form = forms.CreateProjectsForm()
     return_url = ""
     context = {'form': form}
 
-    def get(self, request):
+    def get(self, request, id):
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request):
-        pass
+    def post(self, request, id):
+        self.form = forms.CreateProjectsForm(request.POST)
+        if self.form.is_valid():
+            parent = get_parent_object(id)
+            if isinstance(parent, models.Properties):
+                self.form.instance.property = parent
+            elif isinstance(parent, models.PropertySpaces):
+                self.form.instance.property = parent.property
+                self.form.instance.property_space = parent
+            else:
+                raise ValueError
+
+            try:
+                new_project = self.form.save()
+                return HttpResponseRedirect(reverse('project', args=[new_project.id]))
+            except django.db.utils.IntegrityError:
+                self.context.update({'project_already_exists': "True",
+                                     'form': self.form})
+                return self.get(request, id)
 
 
 class AddSpaceView(View):
@@ -111,3 +139,15 @@ def get_space(space_id: uuid.uuid4):
 
 def get_property(property_id: uuid.uuid4):
     return models.Properties.objects.get(id=property_id)
+
+
+def get_project(project_id: uuid.uuid4):
+    return models.Projects.objects.get(id=project_id)
+
+
+def get_parent_object(id: uuid.uuid4):
+    try:
+        parent = models.Properties.objects.get(id=id)
+    except models.Properties.DoesNotExist:
+        parent = models.PropertySpaces.objects.get(id=id)
+    return parent

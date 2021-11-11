@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ project.name }}{% endblock %}
+
 {% block content %}
     <div class="container">
-        <div class="p-4">
-            <form action="#" method="post" class="for">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
+     <h1 class="display-3">{{ project.name }}</h1>
     </div>
 {% endblock %}

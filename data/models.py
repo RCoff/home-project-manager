@@ -85,6 +85,9 @@ class Projects(models.Model):
     images = models.ManyToManyField(Images, blank=True)
     shared_users = models.ManyToManyField(User, blank=True)
 
+    class Meta:
+        unique_together = ['property', 'property_space', 'name']
+
     @property_
     def display_cost(self):
         return f"${self.cost:,}"
