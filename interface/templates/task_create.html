@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a task{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="p-4">
+            <h1 class="display-3 mb-4">Add a task</h1>
+            {% if project_already_exists %}
+                <div class="alert alert-danger" role="alert">
+                    A task with this name already exists!
+                </div>
+            {% endif %}
+            <form action="#" method="post" class="for">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

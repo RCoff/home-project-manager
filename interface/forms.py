@@ -22,9 +22,18 @@ class AddPropertySpacesForm(forms.ModelForm):
 
 
 class CreateTasksForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+        self.fields['start_datetime'].widget = forms.DateTimeInput(attrs={'class': 'form-control',
+                                                                          'type': 'datetime-local'})
+        self.fields['end_datetime'].widget = forms.DateTimeInput(attrs={'class': 'form-control',
+                                                                        'type': 'datetime-local'})
+
     class Meta:
         model = Tasks
-        fields = ['name', 'description', 'start_datetime', 'end_datetime', 'images']
+        fields = ['name', 'description', 'start_datetime', 'end_datetime']
 
 
 class CreateProjectsForm(forms.ModelForm):
@@ -41,4 +50,4 @@ class CreateProjectsForm(forms.ModelForm):
 
     class Meta:
         model = Projects
-        fields = ['name', 'description', 'start_date', 'end_date', 'status', 'cost',]
+        fields = ['name', 'description', 'start_date', 'end_date', 'status', 'cost', ]

@@ -3,6 +3,7 @@ import uuid
 
 import django.db.utils
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from . import forms
 from data import models
@@ -26,7 +27,7 @@ class Index(View):
             if not self.context.get('properties'):
                 self.context.update({'form': self.form})
         else:
-            self.context.pop('form')
+            self.context.pop('form', None)
 
         return render(request, template_name=self.template, context=self.context)
 
@@ -52,12 +53,13 @@ class PropertyView(View):
     def get(self, request, id):
         self.property = get_property(id)
         self.context.update({'property': self.property,
-                             'spaces': self.property.propertyspaces_set.all})
+                             'spaces': self.property.propertyspaces_set.all,
+                             'projects': self.property.projects_set.all})
 
         return render(request, template_name=self.template, context=self.context)
 
 
-class SpaceView(View):
+class SpaceView(LoginRequiredMixin, View):
     template = 'space.html'
     property = None
     space = None
@@ -74,7 +76,7 @@ class SpaceView(View):
         return render(request, template_name=self.template, context=self.context)
 
 
-class ProjectView(View):
+class ProjectView(LoginRequiredMixin, View):
     template = "project.html"
     context = {}
 
@@ -84,7 +86,17 @@ class ProjectView(View):
         return render(request, template_name=self.template, context=self.context)
 
 
-class CreateProjectView(View):
+class TaskView(LoginRequiredMixin, View):
+    template = "task.html"
+    context = {}
+
+    def get(self, request, id):
+        self.context.update({'task': get_task(id)})
+
+        return render(request, template_name=self.template, context=self.context)
+
+
+class CreateProjectView(LoginRequiredMixin, View):
     template = 'project_create.html'
     form = forms.CreateProjectsForm()
     return_url = ""
@@ -114,7 +126,36 @@ class CreateProjectView(View):
                 return self.get(request, id)
 
 
-class AddSpaceView(View):
+class CreateTaskView(LoginRequiredMixin, View):
+    template = "task_create.html"
+    form = forms.CreateTasksForm()
+    context = {'form': form}
+
+    def get(self, request, id):
+        return render(request, template_name=self.template, context=self.context)
+
+    def post(self, request, id):
+        self.form = forms.CreateTasksForm(request.POST)
+        if self.form.is_valid():
+            parent = get_parent_object(id)
+            if isinstance(parent, models.Properties):
+                self.form.instance.property = parent
+            elif isinstance(parent, models.PropertySpaces):
+                self.form.instance.property = parent.property
+                self.form.instance.property_space = parent
+            else:
+                raise ValueError
+
+            try:
+                new_task = self.form.save()
+                return HttpResponseRedirect(reverse('task', args=[new_task.id]))
+            except django.db.utils.IntegrityError:
+                self.context.update({'task_already_exists': "True",
+                                     'form': self.form})
+                return self.get(request, id)
+
+
+class AddSpaceView(LoginRequiredMixin, View):
     template = 'space_add.html'
     form = forms.AddPropertySpacesForm()
     context = {'form': form}
@@ -143,6 +184,10 @@ def get_property(property_id: uuid.uuid4):
 
 def get_project(project_id: uuid.uuid4):
     return models.Projects.objects.get(id=project_id)
+
+
+def get_task(task_id: uuid.uuid4):
+    return models.Tasks.objects.get(id=task_id)
 
 
 def get_parent_object(id: uuid.uuid4):

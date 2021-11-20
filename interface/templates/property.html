@@ -8,11 +8,25 @@
         <h1 class="display-6">Projects</h1>
         <a href="{% url 'project-add' property.id %}" class="btn btn-primary">Add a project</a>
         <div class="row">
-            {% for project in projects %}
-                <div class="col">
-                    <a href="{% url 'project' project.id %}" class="btn btn-primary">project.name</a>
+            <div class="col">
+                <div class="row">
+                    {% for project in projects %}
+                        <div class="col">
+                            <a href="{% url 'project' project.id %}" class="btn btn-primary">{{ project.name }}</a>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+            <div class="col">
+                <h1 class="display-6">Tasks</h1>
+                <div class="row">
+                    {% for task in tasks %}
+                        <div class="col">
+                            <a href="{% url 'task' task.id %}" class="btn btn-primary">{{ task.name }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
         {% if not spaces %}
             <a href="{% url 'space-add' property.id %}" class="btn btn-primary">Add a space</a>
