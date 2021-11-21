@@ -75,7 +75,7 @@ class Projects(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property = models.ForeignKey(Properties, null=False, on_delete=models.CASCADE)
-    property_space = models.ForeignKey(PropertySpaces, null=True, on_delete=models.CASCADE)
+    property_space = models.ForeignKey(PropertySpaces, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=140)
     description = models.TextField(null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
@@ -93,7 +93,10 @@ class Projects(models.Model):
         return f"${self.cost:,}"
 
     def __str__(self):
-        return f"{self.property.name} - {self.property_space.name} - {self.name} ({self.id})"
+        if self.property_space:
+            return f"{self.property.name} - {self.property_space.name} - {self.name} ({self.id})"
+        else:
+            return f"{self.property.name} - Home - {self.name} ({self.id})"
 
 
 class ProjectAttachments(models.Model):
