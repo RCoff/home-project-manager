@@ -64,6 +64,13 @@ class PropertyItems(models.Model):
     tasks = models.ManyToManyField(Tasks, blank=True)
 
 
+class ProjectActionItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=40)
+    description = models.TextField(null=True, blank=True)
+    images = models.ManyToManyField(Images, blank=True)
+
+
 class Projects(models.Model):
     status_choices = (
         ('pl', 'Planning'),
@@ -84,6 +91,7 @@ class Projects(models.Model):
     cost = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True)
     images = models.ManyToManyField(Images, blank=True)
     shared_users = models.ManyToManyField(User, blank=True)
+    action_items = models.ManyToManyField(ProjectActionItem, blank=True)
 
     class Meta:
         unique_together = ['property', 'property_space', 'name']

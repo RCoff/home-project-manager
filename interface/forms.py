@@ -1,4 +1,4 @@
-from data.models import Properties, PropertySpaces, Tasks, Projects, ProjectAttachments
+from data.models import Properties, PropertySpaces, Tasks, Projects, ProjectAttachments, ProjectActionItem
 from django import forms
 
 
@@ -19,6 +19,17 @@ class AddPropertySpacesForm(forms.ModelForm):
     class Meta:
         model = PropertySpaces
         fields = ['name']
+
+
+class CreateActionItemForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'form-control'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = ProjectActionItem
+        fields = ['title', 'description']
 
 
 class CreateTasksForm(forms.ModelForm):

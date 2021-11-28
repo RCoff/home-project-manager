@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Action Item{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="display-3 mb-4">Add an action item</h1>
+        <form action="{% url 'action-item-add' project.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

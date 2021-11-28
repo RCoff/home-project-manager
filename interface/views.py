@@ -3,7 +3,8 @@ import uuid
 
 import django.db.utils
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.views import View
 from . import forms
 from data import models
@@ -45,32 +46,37 @@ class Index(View):
         return q
 
 
-class PropertyView(View):
+class PropertyView(LoginRequiredMixin, View):
     template = 'property.html'
     property = None
     context = {}
 
     def get(self, request, id):
         self.property = get_property(id)
+
+        # TODO: Create Permission Denied Page
+        _check_access(request, self.property)
+
         self.context.update({'property': self.property,
                              'spaces': self.property.propertyspaces_set.all,
-                             'projects': self.property.projects_set.all})
+                             'projects': self.property.projects_set.filter(property_space=None)})
 
         return render(request, template_name=self.template, context=self.context)
 
 
 class SpaceView(LoginRequiredMixin, View):
     template = 'space.html'
-    property = None
     space = None
     context = {}
 
     def get(self, request, id):
         self.space = get_space(id)
 
+        # _check_access(request, self.space)
+
         self.context.update({'property': self.space.property,
                              'space': self.space,
-                             'projects': self.space.projects_set.all(),
+                             'projects': self.space.projects_set.filter(property_space=self.space),
                              'tasks': self.space.tasks.all})
 
         return render(request, template_name=self.template, context=self.context)
@@ -78,20 +84,28 @@ class SpaceView(LoginRequiredMixin, View):
 
 class ProjectView(LoginRequiredMixin, View):
     template = "project.html"
+    project = None
     context = {}
 
     def get(self, request, id):
-        self.context.update({'project': get_project(id)})
+        self.project = get_project(id)
+        form = forms.CreateProjectsForm(instance=self.project)
+        self.context.update({'project': self.project,
+                             'form': form})
+
+        _check_access(request, self.project.property)
 
         return render(request, template_name=self.template, context=self.context)
 
 
 class TaskView(LoginRequiredMixin, View):
     template = "task.html"
+    task = None
     context = {}
 
     def get(self, request, id):
-        self.context.update({'task': get_task(id)})
+        self.task = get_task(id)
+        self.context.update({'task': self.task})
 
         return render(request, template_name=self.template, context=self.context)
 
@@ -124,6 +138,31 @@ class CreateProjectView(LoginRequiredMixin, View):
                 self.context.update({'project_already_exists': "True",
                                      'form': self.form})
                 return self.get(request, id)
+
+
+class CreateActionItem(LoginRequiredMixin, View):
+    template = 'project_action_item_add.html'
+    context = {}
+
+    def get(self, request, id):
+        form = forms.CreateActionItemForm()
+        self.context.update({'form': form,
+                             'project': get_project(id)})
+
+        return render(request, template_name=self.template, context=self.context)
+
+    def post(self, request, id):
+        form = forms.CreateActionItemForm(request.POST)
+        if form.is_valid():
+            project = get_project(id)
+            new_action_item = form.save()
+            project.action_items.add(new_action_item)
+            project.save()
+
+            return HttpResponseRedirect(reverse('project', args=[id]))
+
+        self.context.update({'form': form})
+        return render(request, template_name=self.template, context=self.context)
 
 
 class CreateTaskView(LoginRequiredMixin, View):
@@ -188,6 +227,11 @@ def get_project(project_id: uuid.uuid4):
 
 def get_task(task_id: uuid.uuid4):
     return models.Tasks.objects.get(id=task_id)
+
+
+def _check_access(request, model_object):
+    if request.user not in model_object.users.all():
+        raise PermissionDenied
 
 
 def get_parent_object(id: uuid.uuid4):
