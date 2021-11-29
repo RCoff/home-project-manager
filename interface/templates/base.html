@@ -19,7 +19,6 @@
         {% if not request.user.is_authenticated %}
             <button type="button" class="btn btn-primary">Login</button>
         {% else %}
-            <p class="muted">Hello, {{ request.user.username }}</p>
             <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
         {% endif %}
     </div>

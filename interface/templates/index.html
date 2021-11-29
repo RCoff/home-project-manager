@@ -1,18 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
+{% block head %}
+    <link href="{% static 'css/property.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <h3 class="mb-4">Welcome</h3>
+        <h1 class="display-3 mb-4">Welcome, {{ request.user.username }}</h1>
         {% if properties %}
-            <p>My properties:</p>
-            <div class="row g-3">
+            <h1 class="display-6">My properties:</h1>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 {% for property in properties %}
                     <div class="col">
-                        <a class="btn btn-primary" href="{% url 'property' property.id %}">{{ property.name }}</a>
+                        <div class="card shadow-sm" style="min-height: 250px;">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="150"
+                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                                <rect width="100%" height="100%" fill="#55595c"></rect>
+                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Placeholder</text>
+                            </svg>
+                            <div class="card-body">
+                                <h1 class="card-title display-6">{{ property.name }}</h1>
+                                <p class="card-text"></p>
+                                <a href="{% url 'property' property.id %}" class="btn btn-primary stretched-link">Open</a>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
+{#                <div class="col">#}
+{#                    <div class="card shadow-sm" style="min-height: 250px;">#}
+{#                        <div class="card-body">#}
+{#                            <a href="{% url 'property-add' %}" class="stretched-link">Add a property</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
             </div>
         {% elif form %}
             <div class="p-4">
