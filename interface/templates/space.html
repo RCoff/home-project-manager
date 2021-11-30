@@ -9,28 +9,40 @@
 
 {% block content %}
     <div class="container">
-        <div class="mb-4">
-            <h1 class="display-4 mb-4">{{ space.name }}</h1>
-            <div class="row gx-5">
-                <div class="col-6">
-                    <h1 class="display-5">Projects</h1>
-                    {% for project in projects %}
-                        <div class="row">
-                            {% include 'components/project_list.html' %}
-                        </div>
-                    {% endfor %}
-                    <a href="{% url 'project-add' space.id %}" class="btn btn-primary">Add
-                        a project</a>
-                </div>
-                <div class="col-6">
-                    <h1 class="display-5">Tasks</h1>
-                    {% for task in tasks %}
-                        <div class="row">
-                            {% include 'components/task_list.html' %}
-                        </div>
-                    {% endfor %}
-                    <a href="{% url 'task-add' space.id %}" class="btn btn-primary">Add a task</a>
-                </div>
+        <h1 class="display-4 mb-4">{{ space.name }}</h1>
+        <ul class="nav nav-tabs mb-4" id="spaces-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects"
+                        type="button"
+                        role="tab" aria-controls="projects" aria-selected="true">
+                    Projects
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button"
+                        role="tab" aria-controls="tasks" aria-selected="false">
+                    Tasks
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+                <h1 class="display-6">Projects</h1>
+                {% for project in projects %}
+                    <div class="row">
+                        {% include 'components/project_list.html' %}
+                    </div>
+                {% endfor %}
+                <a href="{% url 'project-add' space.id %}" class="btn btn-primary">Add a project</a>
+            </div>
+            <div class="tab-pane" id="tasks" role="tabpanel" aria-labelledby="tasks-tab">
+                <h1 class="display-6">Tasks</h1>
+                {% for task in tasks %}
+                    <div class="row">
+                        {% include 'components/task_list.html' %}
+                    </div>
+                {% endfor %}
+                <a href="{% url 'task-add' space.id %}" class="btn btn-primary">Add a task</a>
             </div>
         </div>
     </div>

@@ -10,8 +10,40 @@
 {% block content %}
     <div class="container">
         <h1 class="display-3 mb-4">{{ property.name }}</h1>
-        <div class="row gx-5 mb-4">
-            <div class="col-6">
+        <ul class="nav nav-tabs mb-4" id="property-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="spaces-tab" data-bs-toggle="tab" data-bs-target="#spaces"
+                        type="button"
+                        role="tab" aria-controls="spaces" aria-selected="true">
+                    Spaces
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button"
+                        role="tab" aria-controls="projects" aria-selected="false">
+                    Projects
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button"
+                        role="tab" aria-controls="tasks" aria-selected="false">
+                    Tasks
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="spaces" role="tabpanel" aria-labelledby="spaces-tab">
+                <h1 class="display-6">Spaces</h1>
+                <div class="row">
+                    {% for space in spaces %}
+                        <div class="row">
+                            {% include 'components/spaces_list.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'space-add' property.id %}" class="btn btn-primary">Add a space</a>
+            </div>
+            <div class="tab-pane" id="projects" role="tabpanel" aria-labelledby="projects-tab">
                 <h1 class="display-6">Projects</h1>
                 {% for project in projects %}
                     <div class="row">
@@ -20,7 +52,7 @@
                 {% endfor %}
                 <a href="{% url 'project-add' property.id %}" class="btn btn-primary">Add a project</a>
             </div>
-            <div class="col-6">
+            <div class="tab-pane" id="tasks" role="tabpanel" aria-labelledby="tasks-tab">
                 <h1 class="display-6">Tasks</h1>
                 {% for task in tasks %}
                     <div class="row">
@@ -29,17 +61,6 @@
                 {% endfor %}
                 <a href="{% url 'task-add' property.id %}" class="btn btn-primary">Add a task</a>
             </div>
-        </div>
-        {% if not spaces %}
-            <a href="{% url 'space-add' property.id %}" class="btn btn-primary">Add a space</a>
-        {% endif %}
-        <h1 class="display-5">Spaces:</h1>
-        <div class="row">
-            {% for space in spaces %}
-                <div class="col-6 col-md-4 col-sm-3">
-                    <a href="{% url 'space' space.id %}" class="btn btn-primary">{{ space.name }}</a>
-                </div>
-            {% endfor %}
         </div>
     </div>
 {% endblock %}
