@@ -32,15 +32,6 @@ class Index(View):
 
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request):
-        self.form = forms.AddPropertiesForm(request.POST)
-        if self.form.is_valid():
-            self.form.save()
-            self.form.instance.users.add(request.user)
-            self.form.save()
-
-        return HttpResponseRedirect(reverse('home'))
-
     def properties(self):
         q = models.Properties.objects.filter(users=self.user)
         return q
@@ -194,6 +185,32 @@ class CreateTaskView(LoginRequiredMixin, View):
                 return self.get(request, id)
 
 
+class AddPropertyView(LoginRequiredMixin, View):
+    template = 'property_add.html'
+    form = forms.AddPropertiesForm()
+    context = {'form': form}
+
+    def get(self, request):
+        return render(request, template_name=self.template, context=self.context)
+
+    def post(self, request):
+        self.form = forms.AddPropertiesForm(request.POST, request.FILES)
+        self.context.update({'form': self.form})
+        if self.form.is_valid():
+            new_property = self.form.save()
+            if self.form.cleaned_data['thumbnail']:
+                new_image = models.Images(image=self.form.cleaned_data['thumbnail'])
+                new_image.save()
+                new_property.thumbnail = new_image
+
+            new_property.users.add(request.user)
+            new_property.save()
+
+            return HttpResponseRedirect(reverse('home'))
+        else:
+            return render(request, template_name=self.template, context=self.context)
+
+
 class AddSpaceView(LoginRequiredMixin, View):
     template = 'space_add.html'
     form = forms.AddPropertySpacesForm()
@@ -202,13 +219,21 @@ class AddSpaceView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         self.property_id = id
+        self.context.update({'property': get_property(self.property_id)})
+
         return render(request, template_name=self.template, context=self.context)
 
     def post(self, request, id):
-        self.form = forms.AddPropertySpacesForm(request.POST)
+        self.form = forms.AddPropertySpacesForm(request.POST, request.FILES)
         if self.form.is_valid():
             self.form.instance.property = get_property(id)
             new_space = self.form.save()
+
+            if self.form.cleaned_data['thumbnail']:
+                new_image = models.Images(image=self.form.cleaned_data['thumbnail'])
+                new_image.save()
+                new_space.thumbnail = new_image
+                new_space.save()
 
             return HttpResponseRedirect(reverse('space', args=[new_space.id]))
 

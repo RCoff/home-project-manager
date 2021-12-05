@@ -9,7 +9,7 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="display-3 mb-4">{{ property.name }}</h1>
+        <h1 class="display-3 mb-4" style="min-height: 65px;">{{ property.name }}</h1>
         <ul class="nav nav-tabs mb-4" id="property-tabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="spaces-tab" data-bs-toggle="tab" data-bs-target="#spaces"
@@ -30,17 +30,21 @@
                     Tasks
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button"
+                        role="tab" aria-controls="overview" aria-selected="false">
+                    Overview
+                </button>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="spaces" role="tabpanel" aria-labelledby="spaces-tab">
                 <h1 class="display-6">Spaces</h1>
-                <div class="row">
-                    {% for space in spaces %}
-                        <div class="row">
-                            {% include 'components/spaces_list.html' %}
-                        </div>
-                    {% endfor %}
-                </div>
+                {% for space in spaces %}
+                    <div class="row">
+                        {% include 'components/spaces_list.html' %}
+                    </div>
+                {% endfor %}
                 <a href="{% url 'space-add' property.id %}" class="btn btn-primary">Add a space</a>
             </div>
             <div class="tab-pane" id="projects" role="tabpanel" aria-labelledby="projects-tab">
@@ -60,6 +64,9 @@
                     </div>
                 {% endfor %}
                 <a href="{% url 'task-add' property.id %}" class="btn btn-primary">Add a task</a>
+            </div>
+            <div class="tab-pane" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <h1 class="display-6">Overview</h1>
             </div>
         </div>
     </div>

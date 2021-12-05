@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Add a space{% endblock %}
+{% block title %}Add a property{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 class="display-3">Add a space</h1>
-        <form action="{% url 'space-add' property.id %}" method="post">
+        <h1 class="display-3">Add a property</h1>
+        <form action="{% url 'property-add' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Submit</button>

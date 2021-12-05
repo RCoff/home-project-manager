@@ -3,19 +3,30 @@ from django import forms
 
 
 class AddPropertiesForm(forms.ModelForm):
+    thumbnail = forms.ImageField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['address'].widget.attrs.update({'class': 'form-control'})
         self.fields['city'].widget.attrs.update({'class': 'form-control'})
         self.fields['state'].widget.attrs.update({'class': 'form-control'})
+        self.fields['zipcode'].widget = forms.NumberInput(attrs={'class': 'form-control'})
+        self.fields['thumbnail'].widget.attrs.update({'class': 'form-control'})
 
     class Meta:
         model = Properties
-        fields = ['name', 'address', 'city', 'state']
+        fields = ['name', 'address', 'city', 'state', 'zipcode']
 
 
 class AddPropertySpacesForm(forms.ModelForm):
+    thumbnail = forms.ImageField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['thumbnail'].widget.attrs.update({'class': 'form-control'})
+
     class Meta:
         model = PropertySpaces
         fields = ['name']
