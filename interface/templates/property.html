@@ -7,6 +7,10 @@
     <link href="{% static 'css/property.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="">{{ property.name }}</a></li>
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <h1 class="display-3 mb-4" style="min-height: 65px;">{{ property.name }}</h1>
