@@ -1,4 +1,5 @@
-from data.models import Properties, PropertySpaces, Tasks, Projects, ProjectAttachments, ProjectActionItem
+from data.models import Properties, PropertySpaces, Tasks
+from project.models import Projects, ProjectAttachments, ProjectActionItem
 from django import forms
 
 

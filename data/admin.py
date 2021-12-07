@@ -5,8 +5,5 @@ from . import models
 admin.site.register(models.Properties)
 admin.site.register(models.PropertyItems)
 admin.site.register(models.PropertySpaces)
-admin.site.register(models.Projects)
-admin.site.register(models.ProjectActionItem)
-admin.site.register(models.ProjectAttachments)
 admin.site.register(models.Tasks)
 admin.site.register(models.Images)
