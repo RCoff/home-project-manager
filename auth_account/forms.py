@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class LoginForm(AuthenticationForm):
@@ -9,3 +9,8 @@ class LoginForm(AuthenticationForm):
 
     username.widget.attrs.update({'class': 'form-control'})
     password.widget.attrs.update({'class': 'form-control'})
+
+
+class CreateAccountForm(UserCreationForm):
+    """ """
+    # self.username.widget.attrs.update({'class': 'form-control'})

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}Create account{% endblock %}
+
+{% block content %}
+    <div class="login-body text-center">
+        <main class="form-signin" style="max-width: 600px !important;">
+            <div class="container">
+                <h1 class="h3 mb-3 fw-normal">Create Account</h1>
+                {% if form.non_field_errors %}
+                    <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                <form action="{% url 'account-create' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            {{ form.username }}
+                            <label for="id_username">Username</label>
+                        </div>
+                        <div id="emailHelp" class="form-text">
+                            {{ form.username.help_text }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password1.errors }}
+                        <div class="form-floating">
+                            {{ form.password1 }}
+                            <label for="id_password1">Password</label>
+                        </div>
+                        <div id="passwordHelp" class="form-text">
+                            Your password must contain at least 8 characters.
+                        </div>
+                    </div>
+                    {{ form.password2.errors }}
+                    <div class="form-floating">
+                        {{ form.password2 }}
+                        <label for="id_password2">Re-enter Password</label>
+                    </div>
+                    {#                    {{ form }}#}
+                    <button type="submit" class="w-100 btn btn-lg btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </main>
+    </div>
+{% endblock %}
