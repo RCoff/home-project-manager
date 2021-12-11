@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
 from interface import forms
+from .forms import AddMaterialForm
 from . import models
 from home_project_manager import utils
 
@@ -16,10 +17,14 @@ class ProjectView(LoginRequiredMixin, View):
     project = None
     context = {}
 
-    def get(self, request, id):
+    def get(self, request, id, material_form=AddMaterialForm):
         self.project = utils.get_project(id)
         form = forms.CreateProjectsForm(instance=self.project)
+        material_list = self.project.projectmaterial_set.all()
+
         self.context.update({'project': self.project,
+                             'material_form': material_form,
+                             'material_list': material_list,
                              'form': form})
 
         utils.check_access(request, self.project.property)
@@ -50,3 +55,15 @@ class CreateActionItem(LoginRequiredMixin, View):
 
         self.context.update({'form': form})
         return render(request, template_name=self.template, context=self.context)
+
+
+class AddMaterialView(LoginRequiredMixin, View):
+    def post(self, request, id):
+        form = AddMaterialForm(request.POST)
+        if form.is_valid():
+            form.instance.project = utils.get_project(id)
+            form.save()
+
+            return HttpResponseRedirect(reverse('project', args=[id]))
+        else:
+            return ProjectView.get(request, id, form)

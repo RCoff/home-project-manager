@@ -58,3 +58,21 @@ class ProjectAttachments(models.Model):
     name = models.CharField(max_length=140)
     description = models.TextField()
     images = models.ManyToManyField(Images, blank=True)
+
+
+class ProjectMaterial(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    url = models.URLField(blank=True, null=True)
+    name = models.CharField(max_length=500, blank=True, null=True)
+    description = models.TextField(null=True, blank=True)
+    quantity = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True)
+    cost = models.DecimalField(max_digits=12, decimal_places=4, null=True, blank=True)
+
+    @property_
+    def display_cost(self):
+        return f"${self.cost,}"
+
+    @property_
+    def total_cost(self):
+        return f"${self.cost*self.quantity,}"

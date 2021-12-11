@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.Projects)
 admin.site.register(models.ProjectActionItem)
 admin.site.register(models.ProjectAttachments)
+admin.site.register(models.ProjectMaterial)
