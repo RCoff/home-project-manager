@@ -63,7 +63,8 @@ ROOT_URLCONF = 'home_project_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'interface/templates']
+        'DIRS': [BASE_DIR / 'interface/templates',
+                 BASE_DIR / 'project/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -132,7 +133,8 @@ MEDIA_URL = '/uploads/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    '/interface/static'
+    BASE_DIR / 'interface/static',
+    BASE_DIR / 'project/static'
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
