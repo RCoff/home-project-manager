@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'auth_account',
     'data',
     'interface',
     'project',
@@ -62,7 +63,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'interface/templates',
-                 BASE_DIR / 'project/templates']
+                 BASE_DIR / 'project/templates',
+                 BASE_DIR / 'auth_account/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -121,6 +123,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
 
 MEDIA_ROOT = BASE_DIR.joinpath("uploads")
 MEDIA_URL = '/uploads/'
@@ -129,7 +133,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'interface/static',
-    BASE_DIR / 'project/static'
+    BASE_DIR / 'project/static',
+    BASE_DIR / 'auth_account/static',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
