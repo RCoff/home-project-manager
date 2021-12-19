@@ -54,11 +54,22 @@ class Projects(models.Model):
 
 
 class ProjectAttachments(models.Model):
+    CHOICES = (
+        ('db', 'DropBox'),
+        ('od', 'OneDrive'),
+        ('sp', 'SharePoint'),
+        ('gd', 'GoogleDrive'),
+        ('wa', 'URL'),
+        ('im', 'Image'),
+    )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     name = models.CharField(max_length=140)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=2, choices=CHOICES)
     images = models.ManyToManyField(Images, blank=True)
+    url = models.URLField(blank=True, null=True)
 
 
 class ProjectMaterial(models.Model):
