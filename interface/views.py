@@ -166,6 +166,14 @@ class AddPropertyView(LoginRequiredMixin, View):
             new_property.users.add(request.user)
             new_property.save()
 
+            if self.form.cleaned_data['include_defaults']:
+                print("add defaults")
+
+                models.PropertySpaces(property=new_property,
+                                      name='Living Room').save()
+                models.PropertySpaces(property=new_property,
+                                      name='Kitchen').save()
+
             return HttpResponseRedirect(reverse('home'))
         else:
             return render(request, template_name=self.template, context=self.context)

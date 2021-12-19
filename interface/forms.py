@@ -5,6 +5,7 @@ from django import forms
 
 class AddPropertiesForm(forms.ModelForm):
     thumbnail = forms.ImageField(required=False)
+    include_defaults = forms.BooleanField(required=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,6 +15,8 @@ class AddPropertiesForm(forms.ModelForm):
         self.fields['state'].widget.attrs.update({'class': 'form-control'})
         self.fields['zipcode'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['thumbnail'].widget.attrs.update({'class': 'form-control'})
+        self.fields['include_defaults'].widget.attrs.update({'class': 'form-check-input'})
+        self.fields['include_defaults'].initial = True
 
     class Meta:
         model = Properties
