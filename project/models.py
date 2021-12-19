@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from data.models import Images, Properties, PropertySpaces
+from .utils import money_fmt
 
 property_ = property
 
@@ -71,8 +72,12 @@ class ProjectMaterial(models.Model):
 
     @property_
     def display_cost(self):
-        return f"${self.cost,}"
+        return money_fmt(self.cost, places=4, curr='$')
+
+    @property_
+    def display_total_cost(self):
+        return money_fmt(self.cost * self.quantity, places=4, curr='$')
 
     @property_
     def total_cost(self):
-        return f"${self.cost*self.quantity,}"
+        return self.cost * self.quantity

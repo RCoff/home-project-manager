@@ -4,6 +4,7 @@ import uuid
 import django.db.utils
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.views import View
 
 from interface import forms
@@ -21,6 +22,7 @@ class ProjectView(LoginRequiredMixin, View):
         self.project = utils.get_project(id)
         form = forms.CreateProjectsForm(instance=self.project)
         material_list = self.project.projectmaterial_set.all()
+        # total_material_cost = self.project.projectmaterial_set.aggregate(Sum('total_cost'))
 
         self.context.update({'project': self.project,
                              'material_form': material_form,

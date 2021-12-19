@@ -4,12 +4,11 @@
                 data-bs-target="#materials-view-modal"
                 data-bs-name="{{ material.name }}"
                 data-bs-description="{{ material.description }}"
-                data-bs-cost="{{ material.cost }}"
+                data-bs-cost="{{ material.display_cost }}"
                 data-bs-quantity="{{ material.quantity }}"
                 data-bs-total-cost="{{ material.total_cost }}">
             <i class="bi bi-list"></i>
             <div class="col">{{ material.name }}</div>
-            <div class="col">{{ material.description }}</div>
             <div class="col">{{ material.total_cost }}</div>
         </button>
     {% endfor %}
@@ -96,6 +95,17 @@
                         Quantity:
                     </div>
                     <div class="col" id="modal-material-quantity">
+                        Placeholder
+                    </div>
+                </div>
+                <div class="row">
+                    <br>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        Total Cost:
+                    </div>
+                    <div class="col" id="modal-material-total-cost">
                         Placeholder
                     </div>
                 </div>
