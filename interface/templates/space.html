@@ -10,9 +10,10 @@
 {% block content %}
     <div class="container">
         <div class="row mb-4">
-            <div class="col-1 d-flex align-items-center"><a href="{% url 'property' property.id %}"
-                                                            class="btn btn-outline-primary bi bi-chevron-left"
-                                                            style="font-size: 3em;"></a></div>
+            <div class="col-1 d-flex align-items-center">
+                <a href="{% url 'property' property.id %}"
+                   class="btn btn-outline-primary bi bi-chevron-left"
+                   style="font-size: 3em;" aria-label="Click to go back to the '{{ property.name }}' page"></a></div>
             <div class="col d-flex align-items-center"><h1 class="display-3"
                                                            style="min-height: 65px;">{{ space.name }}</h1></div>
         </div>
@@ -37,7 +38,7 @@
                 </button>
             </li>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content mx-3">
             <div class="tab-pane active" id="projects" role="tabpanel" aria-labelledby="projects-tab">
                 <h1 class="display-6">Projects</h1>
                 {% for project in projects %}
