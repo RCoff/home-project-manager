@@ -11,6 +11,7 @@ from interface import forms
 from .forms import AddMaterialForm
 from . import models
 from home_project_manager import utils
+import project.utils as project_utils
 
 
 class ProjectView(LoginRequiredMixin, View):
@@ -27,7 +28,8 @@ class ProjectView(LoginRequiredMixin, View):
         self.context.update({'project': self.project,
                              'material_form': material_form,
                              'material_list': material_list,
-                             'form': form})
+                             'form': form,
+                             'back_url': project_utils.get_project_parent_url(self.project)})
 
         utils.check_access(request, self.project.property)
 

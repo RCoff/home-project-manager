@@ -1,4 +1,6 @@
 from decimal import Decimal
+from data.models import Properties, PropertySpaces
+from django.shortcuts import reverse
 
 
 def money_fmt(value, places=2, curr='', sep=',', dp='.',
@@ -38,3 +40,14 @@ def money_fmt(value, places=2, curr='', sep=',', dp='.',
     build(neg if sign else pos)
 
     return ''.join(reversed(result))
+
+
+def get_project_parent_url(project) -> str:
+    if project.property_space:
+        parent_url = reverse('space', args=[project.property_space.id])
+    elif project.property:
+        parent_url = reverse('property', args=[project.property.id])
+    else:
+        raise ValueError("Project does not have a property or space assocaited with it")
+
+    return parent_url

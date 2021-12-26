@@ -9,7 +9,13 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="display-4 mb-4" style="min-height: 65px;">{{ space.name }}</h1>
+        <div class="row mb-4">
+            <div class="col-1 d-flex align-items-center"><a href="{% url 'property' property.id %}"
+                                                            class="btn btn-outline-primary bi bi-chevron-left"
+                                                            style="font-size: 3em;"></a></div>
+            <div class="col d-flex align-items-center"><h1 class="display-3"
+                                                           style="min-height: 65px;">{{ space.name }}</h1></div>
+        </div>
         <ul class="nav nav-tabs mb-4" id="spaces-tabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects"

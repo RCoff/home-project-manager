@@ -9,37 +9,40 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="display-3 mb-4" style="min-height: 65px;">{{ property.name }}</h1>
+        <div class="row mb-4">
+            <div class="col-1 d-flex align-items-center">
+                <a href="{% url 'home' %}" class="btn btn-outline-primary bi bi-chevron-left"
+                   style="font-size: 3em;"></a></div>
+            {#            <div class="col-1 d-flex align-items-center"><a href="{% url 'home' %}" class="bi bi-chevron-left border border-primary rounded-3" style="font-size: 3em;"></a></div>#}
+            <div class="col d-flex align-items-center"><h1 class="display-3"
+                                                           style="min-height: 65px;">{{ property.name }}</h1></div>
+        </div>
         <ul class="nav nav-tabs mb-4" id="property-tabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="spaces-tab" data-bs-toggle="tab" data-bs-target="#spaces"
                         type="button"
-                        role="tab" aria-controls="spaces" aria-selected="true">
-                    Spaces
+                        role="tab" aria-controls="spaces" aria-selected="true">Spaces
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button"
-                        role="tab" aria-controls="projects" aria-selected="false">
-                    Projects
+                        role="tab" aria-controls="projects" aria-selected="false">Projects
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button"
-                        role="tab" aria-controls="tasks" aria-selected="false">
-                    Tasks
+                        role="tab" aria-controls="tasks" aria-selected="false">Tasks
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button"
-                        role="tab" aria-controls="overview" aria-selected="false">
-                    Overview
+                        role="tab" aria-controls="overview" aria-selected="false">Overview
                 </button>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="spaces" role="tabpanel" aria-labelledby="spaces-tab">
-                <h1 class="display-6">Spaces</h1>
+            <div class="tab-pane mx-3 active" id="spaces" role="tabpanel" aria-labelledby="spaces-tab">
+                <h1 class="display-5 mb-3">Spaces</h1>
                 {% for space in spaces %}
                     <div class="row">
                         {% include 'components/spaces_list.html' %}
