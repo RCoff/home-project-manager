@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.views import View
 
-from interface import forms
+from interface import create_forms
 from .forms import AddMaterialForm
 from . import models
 from home_project_manager import utils
@@ -19,9 +19,9 @@ class ProjectView(LoginRequiredMixin, View):
     project = None
     context = {}
 
-    def get(self, request, id, material_form=AddMaterialForm):
-        self.project = utils.get_project(id)
-        form = forms.CreateProjectsForm(instance=self.project)
+    def get(self, request, id_, material_form=AddMaterialForm):
+        self.project = utils.get_project(id_)
+        form = create_forms.CreateProjectsForm(instance=self.project)
         material_list = self.project.projectmaterial_set.all()
         # total_material_cost = self.project.projectmaterial_set.aggregate(Sum('total_cost'))
 
@@ -40,34 +40,34 @@ class CreateActionItem(LoginRequiredMixin, View):
     template = 'project_action_item_add.html'
     context = {}
 
-    def get(self, request, id):
-        form = forms.CreateActionItemForm()
+    def get(self, request, id_):
+        form = create_forms.CreateActionItemForm()
         self.context.update({'form': form,
-                             'project': utils.get_project(id)})
+                             'project': utils.get_project(id_)})
 
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request, id):
-        form = forms.CreateActionItemForm(request.POST)
+    def post(self, request, id_):
+        form = create_forms.CreateActionItemForm(request.POST)
         if form.is_valid():
-            project = utils.get_project(id)
+            project = utils.get_project(id_)
             new_action_item = form.save()
             project.action_items.add(new_action_item)
             project.save()
 
-            return HttpResponseRedirect(reverse('project', args=[id]))
+            return HttpResponseRedirect(reverse('project', args=[id_]))
 
         self.context.update({'form': form})
         return render(request, template_name=self.template, context=self.context)
 
 
 class AddMaterialView(LoginRequiredMixin, View):
-    def post(self, request, id):
+    def post(self, request, id_):
         form = AddMaterialForm(request.POST)
         if form.is_valid():
             form.instance.project = utils.get_project(id)
             form.save()
 
-            return HttpResponseRedirect(reverse('project', args=[id]))
+            return HttpResponseRedirect(reverse('project', args=[id_]))
         else:
-            return ProjectView.get(request, id, form)
+            return ProjectView.get(request, id_, form)

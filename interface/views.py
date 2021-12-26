@@ -4,9 +4,10 @@ import django.db.utils
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from . import forms
+from . import create_forms
 from data import models
 from home_project_manager import utils
+import project.utils as project_utils
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 class Index(View):
     template = 'index.html'
-    form = forms.AddPropertiesForm()
+    form = create_forms.AddPropertiesForm()
     context = {}
     user = None
 
@@ -43,8 +44,8 @@ class PropertyView(LoginRequiredMixin, View):
     property = None
     context = {}
 
-    def get(self, request, id):
-        self.property = utils.get_property(id)
+    def get(self, request, id_):
+        self.property = utils.get_property(id_)
 
         # TODO: Create Permission Denied Page
         utils.check_access(request, self.property)
@@ -61,8 +62,8 @@ class SpaceView(LoginRequiredMixin, View):
     space = None
     context = {}
 
-    def get(self, request, id):
-        self.space = utils.get_space(id)
+    def get(self, request, id_):
+        self.space = utils.get_space(id_)
 
         # _check_access(request, self.space)
 
@@ -79,8 +80,8 @@ class TaskView(LoginRequiredMixin, View):
     task = None
     context = {}
 
-    def get(self, request, id):
-        self.task = utils.get_task(id)
+    def get(self, request, id_):
+        self.task = utils.get_task(id_)
         self.context.update({'task': self.task})
 
         return render(request, template_name=self.template, context=self.context)
@@ -88,17 +89,19 @@ class TaskView(LoginRequiredMixin, View):
 
 class CreateProjectView(LoginRequiredMixin, View):
     template = 'project_create.html'
-    form = forms.CreateProjectsForm()
+    form = create_forms.CreateProjectsForm()
     return_url = ""
     context = {'form': form}
 
-    def get(self, request, id):
+    def get(self, request, id_):
+        self.context.update({'parent': utils.get_parent_object(id_)})
+
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request, id):
-        self.form = forms.CreateProjectsForm(request.POST)
+    def post(self, request, id_):
+        self.form = create_forms.CreateProjectsForm(request.POST)
         if self.form.is_valid():
-            parent = utils.get_parent_object(id)
+            parent = utils.get_parent_object(id_)
             if isinstance(parent, models.Properties):
                 self.form.instance.property = parent
             elif isinstance(parent, models.PropertySpaces):
@@ -113,21 +116,21 @@ class CreateProjectView(LoginRequiredMixin, View):
             except django.db.utils.IntegrityError:
                 self.context.update({'project_already_exists': "True",
                                      'form': self.form})
-                return self.get(request, id)
+                return self.get(request, id_)
 
 
 class CreateTaskView(LoginRequiredMixin, View):
     template = "task_create.html"
-    form = forms.CreateTasksForm()
+    form = create_forms.CreateTasksForm()
     context = {'form': form}
 
-    def get(self, request, id):
+    def get(self, request, id_):
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request, id):
-        self.form = forms.CreateTasksForm(request.POST)
+    def post(self, request, id_):
+        self.form = create_forms.CreateTasksForm(request.POST)
         if self.form.is_valid():
-            parent = utils.get_parent_object(id)
+            parent = utils.get_parent_object(id_)
             if isinstance(parent, models.Properties):
                 self.form.instance.property = parent
             elif isinstance(parent, models.PropertySpaces):
@@ -142,19 +145,19 @@ class CreateTaskView(LoginRequiredMixin, View):
             except django.db.utils.IntegrityError:
                 self.context.update({'task_already_exists': "True",
                                      'form': self.form})
-                return self.get(request, id)
+                return self.get(request, id_)
 
 
 class AddPropertyView(LoginRequiredMixin, View):
     template = 'property_add.html'
-    form = forms.AddPropertiesForm()
+    form = create_forms.AddPropertiesForm()
     context = {'form': form}
 
     def get(self, request):
         return render(request, template_name=self.template, context=self.context)
 
     def post(self, request):
-        self.form = forms.AddPropertiesForm(request.POST, request.FILES)
+        self.form = create_forms.AddPropertiesForm(request.POST, request.FILES)
         self.context.update({'form': self.form})
         if self.form.is_valid():
             new_property = self.form.save()
@@ -181,20 +184,20 @@ class AddPropertyView(LoginRequiredMixin, View):
 
 class AddSpaceView(LoginRequiredMixin, View):
     template = 'space_add.html'
-    form = forms.AddPropertySpacesForm()
+    form = create_forms.AddPropertySpacesForm()
     context = {'form': form}
     property_id = None
 
-    def get(self, request, id):
-        self.property_id = id
+    def get(self, request, id_):
+        self.property_id = id_
         self.context.update({'property': utils.get_property(self.property_id)})
 
         return render(request, template_name=self.template, context=self.context)
 
-    def post(self, request, id):
-        self.form = forms.AddPropertySpacesForm(request.POST, request.FILES)
+    def post(self, request, id_):
+        self.form = create_forms.AddPropertySpacesForm(request.POST, request.FILES)
         if self.form.is_valid():
-            self.form.instance.property = utils.get_property(id)
+            self.form.instance.property = utils.get_property(id_)
             new_space = self.form.save()
 
             if self.form.cleaned_data['thumbnail']:

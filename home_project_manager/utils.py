@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import reverse
 
 from data.models import Properties, PropertySpaces, PropertyItems, Tasks
 from project.models import Projects, ProjectAttachments, ProjectActionItem
@@ -36,3 +37,16 @@ def get_parent_object(id: uuid.uuid4):
     except Properties.DoesNotExist:
         parent = PropertySpaces.objects.get(id=id)
     return parent
+
+
+def get_parent_object_url(id_: uuid.uuid4):
+    try:
+        # Property Parent Object
+        parent = Properties.objects.get(id=id_)
+        parent_url = reverse('property', args=[id_])
+    except Properties.DoesNotExist:
+        # Space Parent Object
+        parent = PropertySpaces.objects.get(id=id_)
+        parent_url = reverse('space', args=[id_])
+
+    return parent_url
