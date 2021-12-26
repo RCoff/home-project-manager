@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
 
 from data.models import Images, Properties, PropertySpaces
 from .utils import money_fmt
@@ -45,6 +46,10 @@ class Projects(models.Model):
     @property_
     def display_cost(self):
         return f"${self.cost:,}"
+
+    @property_
+    def url(self):
+        return reverse('project', args=[self.id])
 
     def __str__(self):
         if self.property_space:

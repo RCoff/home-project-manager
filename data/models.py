@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -45,6 +46,10 @@ class Properties(models.Model):
     def check_users(self):
         pass
 
+    @property_
+    def url(self):
+        return reverse('property', args=[self.id])
+
     def __str__(self):
         return f"{self.name} ({self.id})"
 
@@ -55,6 +60,10 @@ class PropertySpaces(models.Model):
     name = models.CharField(max_length=140)
     thumbnail = models.ForeignKey(Images, on_delete=models.CASCADE, blank=True, null=True)
     tasks = models.ManyToManyField(Tasks, blank=True)
+
+    @property_
+    def url(self):
+        return reverse('space', args=[self.id])
 
     def __str__(self):
         return f"{self.property.name} - {self.name} ({self.id})"
