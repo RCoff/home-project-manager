@@ -1,6 +1,6 @@
 <div class="card mb-3 shadow-sm">
     <div class="row g-0">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <svg class="bd-placeholder-img img-fluid rounded-start"
                  xmlns="http://www.w3.org/2000/svg" role="img"
                  aria-label="Placeholder: Thumbnail"
@@ -10,11 +10,11 @@
                 <text x="50%" y="50%" fill="#eceeef" dy=".3em">Placeholder</text>
             </svg>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-10 d-flex align-items-center">
             <div class="card-body">
-                <p class="card-text">{{ space.name }}</p>
+                <h1 class="display-6 card-text">{{ space.name }}</h1>
                 <a href="{% url 'space' space.id %}"
-                   class="btn btn-primary stretched-link">Open</a>
+                   class="stretched-link"></a>
             </div>
         </div>
     </div>
