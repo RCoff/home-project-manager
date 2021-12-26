@@ -15,6 +15,7 @@
         {% else %}
             {% if properties %}
                 <h1 class="display-3 mb-3">Welcome, {{ request.user.username }}</h1>
+                <hr class="mb-4" />
                 <h1 class="display-6 mb-4">My properties</h1>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                     {% for property in properties %}
@@ -37,7 +38,7 @@
                                     <h1 class="card-title display-6">{{ property.name }}</h1>
                                     <p class="card-text"></p>
                                     <a href="{% url 'property' property.id %}"
-                                       class="btn btn-primary stretched-link">Open</a>
+                                       class="stretched-link" aria-label="Open the property page for {{ property.name }}"></a>
                                 </div>
                             </div>
                         </div>
