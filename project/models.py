@@ -9,24 +9,27 @@ from .utils import money_fmt
 
 property_ = property
 
+status_choices = (
+    ('pl', 'Planning'),
+    ('ns', 'Not Started'),
+    ('ip', 'In Progress'),
+    ('cm', 'Completed'),
+    ('hl', 'On Hold'),
+)
+
 
 # Create your models here.
 class ProjectActionItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(choices=status_choices, max_length=2, default='pl')
     images = models.ManyToManyField(Images, blank=True)
 
 
 class Projects(models.Model):
-    status_choices = (
-        ('pl', 'Planning'),
-        ('ns', 'Not Started'),
-        ('ip', 'In Progress'),
-        ('cm', 'Completed'),
-        ('hl', 'On Hold'),
-    )
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property = models.ForeignKey(Properties, null=False, on_delete=models.CASCADE)
     property_space = models.ForeignKey(PropertySpaces, null=True, blank=True, on_delete=models.CASCADE)
