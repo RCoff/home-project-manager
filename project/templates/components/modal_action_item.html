@@ -3,10 +3,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title display-5">{{ action_item.title }}</h1>
+                <div class="p-4">
+                    <a href="#" class="btn btn-outline-secondary"><i class="bi bi-pencil-square"></i></a>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>{{ action_item.description }}</p>
+                <p>Description</p>
+                <textarea class="form-control" readonly>{{ action_item.description }}</textarea>
+                <p>Start Date</p>
+                <p>{{ action_item.start_date }}</p>
+                <p>{{ action_item.end_date }}</p>
+                <p>Status</p>
+                <input type="radio" readonly>{{ action_item.status }}</input>
+                <p>Images</p>
+                <input type="file" readonly>{{ action_item.images }}</input>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
