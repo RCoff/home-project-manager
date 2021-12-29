@@ -23,8 +23,11 @@ urlpatterns = [
     path('p/', include('project.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('allauth/', include('allauth.urls')),
     path('auth/', include('auth_account.urls')),
 ]
+
+SITE_ID = 1
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
